@@ -1,0 +1,254 @@
+{
+  "main:감바스": {
+    "protein": "seafood",
+    "cookingMethod": "stir-fry",
+    "mealWeight": "medium",
+    "tags": ["main", "seafood", "stir-fry", "western"]
+  },
+  "main:그릴함박": {
+    "protein": "meat",
+    "cookingMethod": "grilled",
+    "mealWeight": "heavy",
+    "tags": ["grilled", "main", "meat", "student-favorite", "western"]
+  },
+  "main:너비아니": {
+    "protein": "meat",
+    "cookingMethod": "grilled",
+    "mealWeight": "heavy",
+    "tags": ["grilled", "korean", "main", "meat", "student-favorite"]
+  },
+  "main:동그랑땡": {
+    "protein": "meat",
+    "cookingMethod": "fried",
+    "mealWeight": "medium",
+    "tags": ["fried", "korean", "main", "meat", "student-favorite"]
+  },
+  "main:보쌈": {
+    "protein": "meat",
+    "cookingMethod": "steamed",
+    "mealWeight": "heavy",
+    "tags": ["korean", "main", "meat", "steamed", "student-favorite"]
+  },
+  "main:수육": {
+    "protein": "meat",
+    "cookingMethod": "steamed",
+    "mealWeight": "heavy",
+    "tags": ["korean", "main", "meat", "steamed"]
+  },
+  "main:순대": {
+    "protein": "meat",
+    "cookingMethod": "steamed",
+    "mealWeight": "medium",
+    "tags": ["korean", "main", "meat", "steamed"]
+  },
+  "main:차슈": {
+    "protein": "meat",
+    "cookingMethod": "braised",
+    "mealWeight": "medium",
+    "tags": ["braised", "main", "meat"]
+  },
+  "main:깐풍기": {
+    "protein": "meat",
+    "cookingMethod": "fried",
+    "mealWeight": "heavy",
+    "tags": ["fried", "main", "meat", "student-favorite"]
+  },
+  "main:깐풍육": {
+    "protein": "meat",
+    "cookingMethod": "fried",
+    "mealWeight": "heavy",
+    "tags": ["fried", "main", "meat", "student-favorite"]
+  },
+  "main:난자완스": {
+    "protein": "meat",
+    "cookingMethod": "fried",
+    "mealWeight": "heavy",
+    "tags": ["fried", "main", "meat"]
+  },
+  "main:유린기": {
+    "protein": "meat",
+    "cookingMethod": "fried",
+    "mealWeight": "heavy",
+    "tags": ["fried", "main", "meat"]
+  },
+  "main:쉑쉑버거": {
+    "protein": "mixed",
+    "cookingMethod": "baked",
+    "mealWeight": "heavy",
+    "tags": ["baked", "main", "mixed", "student-favorite", "western"]
+  },
+  "main:싸이버거": {
+    "protein": "mixed",
+    "cookingMethod": "baked",
+    "mealWeight": "heavy",
+    "tags": ["baked", "main", "mixed", "student-favorite", "western"]
+  },
+  "main:새우버거": {
+    "protein": "mixed",
+    "cookingMethod": "baked",
+    "mealWeight": "medium",
+    "tags": ["baked", "main", "mixed", "seafood", "student-favorite", "western"]
+  },
+  "main:감자핫도그": {
+    "protein": "mixed",
+    "cookingMethod": "baked",
+    "mealWeight": "medium",
+    "tags": ["baked", "main", "mixed", "student-favorite"]
+  },
+  "main:쌀핫도그": {
+    "protein": "mixed",
+    "cookingMethod": "baked",
+    "mealWeight": "medium",
+    "tags": ["baked", "main", "mixed", "student-favorite"]
+  },
+  "main:뉴욕핫도그": {
+    "protein": "mixed",
+    "cookingMethod": "baked",
+    "mealWeight": "medium",
+    "tags": ["baked", "main", "mixed", "student-favorite", "western"]
+  },
+  "main:꼬마핫도그": {
+    "protein": "mixed",
+    "cookingMethod": "baked",
+    "mealWeight": "medium",
+    "tags": ["baked", "main", "mixed", "student-favorite"]
+  },
+  "side:고로케": {
+    "protein": "vegetable",
+    "cookingMethod": "fried",
+    "mealWeight": "light",
+    "tags": ["fried", "light", "side", "vegetable"]
+  },
+  "side:감자범벅": {
+    "protein": "vegetable",
+    "cookingMethod": "salad",
+    "mealWeight": "light",
+    "tags": ["light", "salad", "side", "vegetable"]
+  },
+  "side:감자볼": {
+    "protein": "vegetable",
+    "cookingMethod": "fried",
+    "mealWeight": "light",
+    "tags": ["fried", "light", "side", "vegetable"]
+  },
+  "side:감자칩": {
+    "protein": "vegetable",
+    "cookingMethod": "fried",
+    "mealWeight": "light",
+    "tags": ["fried", "light", "side", "vegetable"]
+  },
+  "side:구운김": {
+    "protein": "vegetable",
+    "cookingMethod": "grilled",
+    "mealWeight": "light",
+    "tags": ["grilled", "light", "side", "vegetable"]
+  },
+  "side:군밤": {
+    "protein": "other",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "light", "side"]
+  },
+  "side:단무지": {
+    "protein": "vegetable",
+    "cookingMethod": "raw",
+    "mealWeight": "light",
+    "tags": ["light", "raw", "side", "vegetable"]
+  },
+  "side:도토리묵": {
+    "protein": "vegetable",
+    "cookingMethod": "raw",
+    "mealWeight": "light",
+    "tags": ["korean", "light", "raw", "side", "vegetable"]
+  },
+  "side:연두부": {
+    "protein": "tofu",
+    "cookingMethod": "raw",
+    "mealWeight": "light",
+    "tags": ["light", "raw", "side", "tofu"]
+  },
+  "dessert:과수원": {
+    "protein": "fruit",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "fruit", "light"]
+  },
+  "dessert:두유": {
+    "protein": "dairy",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dairy", "dessert", "light"]
+  },
+  "dessert:리치": {
+    "protein": "fruit",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "fruit", "light"]
+  },
+  "dessert:메론": {
+    "protein": "fruit",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "fruit", "light"]
+  },
+  "dessert:멜론": {
+    "protein": "fruit",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "fruit", "light"]
+  },
+  "dessert:모구모구": {
+    "protein": "fruit",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "fruit", "light"]
+  },
+  "dessert:비요뜨": {
+    "protein": "dairy",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dairy", "dessert", "light"]
+  },
+  "dessert:요플레": {
+    "protein": "dairy",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dairy", "dessert", "light"]
+  },
+  "dessert:우유": {
+    "protein": "dairy",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dairy", "dessert", "light"]
+  },
+  "dessert:주스": {
+    "protein": "fruit",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "fruit", "light"]
+  },
+  "dessert:제리뽀": {
+    "protein": "mixed",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "light", "mixed"]
+  },
+  "dessert:쥬시쿨": {
+    "protein": "fruit",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "fruit", "light"]
+  },
+  "dessert:콜라": {
+    "protein": "mixed",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "light", "mixed"]
+  },
+  "side:군밤": {
+    "protein": "mixed",
+    "cookingMethod": "dessert",
+    "mealWeight": "light",
+    "tags": ["dessert", "light", "mixed", "side"]
+  }
+}

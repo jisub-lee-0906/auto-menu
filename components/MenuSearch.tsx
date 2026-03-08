@@ -1,12 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import menuDb from '@/data/menu_db.json';
-
-type MenuCategory = 'rice' | 'soup' | 'main' | 'side' | 'kimchi' | 'dessert';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { menuCatalog, MenuCategory } from '@/lib/menuCatalog';
 
 interface MenuSearchProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
@@ -19,42 +16,38 @@ const CATEGORY_NAMES: Record<MenuCategory, string> = {
   dessert: '후식',
 };
 
-export default function MenuSearch({ isOpen, onClose }: MenuSearchProps) {
+export default function MenuSearch({ onClose }: MenuSearchProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState<{ category: MenuCategory; items: string[] }[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
-      setSearchTerm('');
-      setResults([]);
-    }
-  }, [isOpen]);
+    const timer = window.setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
 
-  useEffect(() => {
-    if (!searchTerm.trim()) {
-      setResults([]);
-      return;
-    }
+    return () => window.clearTimeout(timer);
+  }, []);
 
-    const term = searchTerm.toLowerCase();
-    const db = menuDb as Record<string, string[]>;
-    const newResults: { category: MenuCategory; items: string[] }[] = [];
+  const results = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return [];
 
-    (Object.keys(db) as MenuCategory[]).forEach((category) => {
-      const matches = db[category].filter((item) => item.toLowerCase().includes(term));
-      if (matches.length > 0) {
-        newResults.push({ category, items: matches });
-      }
-    });
-
-    setResults(newResults);
+    return (Object.keys(menuCatalog) as MenuCategory[]).reduce<{ category: MenuCategory; items: string[] }[]>(
+      (acc, category) => {
+        const items = menuCatalog[category]
+          .filter((item) => {
+            const searchable = [item.name, ...item.tags].join(' ').toLowerCase();
+            return searchable.includes(term);
+          })
+          .map((item) => item.name);
+        if (items.length > 0) {
+          acc.push({ category, items });
+        }
+        return acc;
+      },
+      []
+    );
   }, [searchTerm]);
-
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-24 px-4">

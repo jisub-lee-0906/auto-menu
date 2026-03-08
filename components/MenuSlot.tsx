@@ -4,21 +4,21 @@ import React from 'react';
 
 interface MenuSlotProps {
     title: string;
-    subtitle?: string; // e.g. "Main Dish"
     menuItem: string;
     isLocked: boolean;
     onToggleLock: () => void;
     onRefresh: () => void;
+    onExclude?: () => void;
     className?: string; // allow external grid positioning
 }
 
 export default function MenuSlot({
     title,
-    subtitle,
     menuItem,
     isLocked,
     onToggleLock,
     onRefresh,
+    onExclude,
     className = '',
 }: MenuSlotProps) {
     return (
@@ -56,13 +56,24 @@ export default function MenuSlot({
 
                     {/* Refresh Button */}
                     {!isLocked && (
-                        <button
-                            onClick={(e) => { e.stopPropagation(); onRefresh(); }}
-                            className="p-1.5 rounded-full hover:bg-[#F2F4F6] text-[#B0B8C1] hover:text-[#3182F6] transition-colors"
-                            aria-label="Refresh Item"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                        </button>
+                        <>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onRefresh(); }}
+                                className="p-1.5 rounded-full hover:bg-[#F2F4F6] text-[#B0B8C1] hover:text-[#3182F6] transition-colors"
+                                aria-label="Refresh Item"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                            </button>
+                            {onExclude ? (
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onExclude(); }}
+                                    className="p-1.5 rounded-full hover:bg-[#FFF4E5] text-[#B0B8C1] hover:text-[#F97316] transition-colors"
+                                    aria-label="Exclude Item"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>
+                            ) : null}
+                        </>
                     )}
                 </div>
             </div>
