@@ -1,69 +1,133 @@
-# 오늘의 급식 (Auto Menu)
+# 오늘의 급식 (Auto Menu App)
 
-**오늘의 급식**은 영양가 있는 식단을 자동으로 생성해주는 스마트 급식 메뉴 생성기입니다.  
-매일 무엇을 먹을지 고민하는 시간을 줄이고, 균형 잡힌 맛있는 식단을 제안받아보세요.
+한국형 급식 메뉴 데이터를 기반으로 식단 조합을 빠르게 생성하는 Next.js 앱입니다.  
+영양사나 식단 기획자가 초안 아이디어를 빠르게 뽑아보는 보조도구를 목표로 합니다.
 
-## 🔗 배포 주소 (Live Demo)
+배포 주소: [https://auto-menu-app-omega.vercel.app/](https://auto-menu-app-omega.vercel.app/)
 
-👉 **[https://auto-menu-app-omega.vercel.app/](https://auto-menu-app-omega.vercel.app/)**
+## 주요 기능
 
-## ✨ 주요 기능 (Features)
+- 급식 식단 자동 생성
+  - 밥, 국·찌개, 메인 반찬, 반찬 2종, 김치, 후식을 한 번에 조합합니다.
+- 부분 고정
+  - 원하는 항목은 잠그고 나머지만 다시 생성할 수 있습니다.
+- 개별 새로고침
+  - 특정 슬롯만 다시 뽑아 식단을 미세 조정할 수 있습니다.
+- 제외 메뉴 관리
+  - 원하지 않는 메뉴를 제외 목록에 넣고, 다시 해제하거나 전체 초기화할 수 있습니다.
+- 최근 조합 / 즐겨찾기
+  - 방금 본 식단을 다시 불러오거나, 마음에 드는 조합을 따로 저장할 수 있습니다.
+- 추천 설명
+  - 현재 조합의 성격을 요약 문장과 배지로 보여줍니다.
+- 메뉴 검색
+  - 이름과 태그 기준으로 전체 메뉴를 검색할 수 있습니다.
+- 복사 / 이미지 저장
+  - 식단 텍스트를 복사하거나 카드 이미지를 저장할 수 있습니다.
 
-*   **🎲 랜덤 식단 생성**: 밥, 국, 메인 반찬, 보조 반찬, 김치, 후식까지 완벽한 한 끼 식단을 버튼 하나로 생성합니다.
-*   **🔒 메뉴 잠금 모드**: 마음에 드는 메뉴는 자물쇠로 잠그고, 나머지 메뉴만 다시 돌려볼 수 있습니다.
-*   **🔄 개별 새로고침**: 특정 반찬이 마음에 들지 않는다면? 해당 메뉴만 콕 집어 바꿀 수 있습니다.
-*   **📸 이미지 저장**: 완성된 나만의 식단을 깔끔한 이미지 카드로 저장하여 공유할 수 있습니다.
-*   **📋 텍스트 복사**: 식단 리스트를 텍스트로 복사하여 메신저나 메모장에 쉽게 공유하세요.
-*   **📱 반응형 디자인**: 모바일과 데스크탑 어디서든 깔끔한 **Toss Style**의 UI를 경험할 수 있습니다.
+## 기술 스택
 
-## 🛠 기술 스택 (Tech Stack)
+- Framework: Next.js 16
+- Language: TypeScript
+- UI: React 19, Tailwind CSS 4
+- Utility: html2canvas
+- Deployment: Vercel
 
-*   **Framework**: [Next.js](https://nextjs.org/) (App Router)
-*   **Language**: TypeScript
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-*   **Libraries**:
-    *   `html2canvas`: 식단 이미지 저장 기능 구현
-    *   `@vercel/analytics`, `@vercel/speed-insights`: 웹사이트 성능 및 사용자 분석
-*   **Deployment**: [Vercel](https://vercel.com/)
+## 프로젝트 구조
 
-## 🚀 시작하기 (Getting Started)
-
-프로젝트를 로컬 환경에서 실행하려면 다음 단계를 따르세요.
-
-### 1. 저장소 클론 (Clone)
-
-```bash
-git clone https://github.com/jisub-lee-0906/Auto_Menu_App.git
-cd Auto_Menu_App
+```text
+app/          앱 라우트와 페이지
+components/   UI 컴포넌트
+data/         메뉴 원본 및 구조화 카탈로그
+lib/          메뉴 생성 로직과 카탈로그 유틸
+scripts/      데이터 정리 / 검증 스크립트
+docs/         데이터 정책 및 검수 문서
 ```
 
-### 2. 패키지 설치 (Install Dependencies)
+## 데이터 구조
+
+이 프로젝트는 DB 없이 정적 JSON 파일을 사용합니다.
+
+- `data/menu_db.json`
+  - 카테고리별 원본 메뉴 데이터
+- `data/menu_catalog.json`
+  - 앱에서 실제로 사용하는 구조화된 메뉴 카탈로그
+- `data/menu_catalog_overrides.json`
+  - 수동 보정용 오버라이드 데이터
+
+구조화 카탈로그에는 아래 정보가 포함됩니다.
+
+- `id`
+- `name`
+- `category`
+- `tags`
+- `protein`
+- `cookingMethod`
+- `spicyLevel`
+- `mealWeight`
+
+## 시작하기
+
+### 1. 설치
 
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
 ```
 
-### 3. 개발 서버 실행 (Run Dev Server)
+### 2. 개발 서버 실행
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 결과를 확인하세요.
+브라우저에서 `http://localhost:3000` 을 열면 됩니다.
 
-## 👥 만든 사람들 (Credits)
+## 주요 스크립트
 
-*   **Development**: 이지섭
-*   **Data Curation**: 문채영
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run clean:data
+npm run build:data
+npm run audit:data
+npm run audit:catalog
+```
 
----
+### 데이터 관련
 
-> **Note**: 이 프로젝트는 학습 및 포트폴리오 목적으로 제작되었습니다.
+- `npm run clean:data`
+  - 원본 메뉴 데이터를 정리합니다.
+- `npm run build:data`
+  - 구조화된 메뉴 카탈로그를 생성합니다.
+- `npm run audit:data`
+  - 원본 데이터 중복/충돌을 검사합니다.
+- `npm run audit:catalog`
+  - 구조화 카탈로그 무결성을 검사합니다.
+
+## 현재 서비스 성격
+
+이 프로젝트는 급식 운영 시스템이 아니라, 식단 아이디어를 빠르게 만들기 위한 보조도구입니다.
+
+포함하지 않는 것:
+
+- 사용자 로그인
+- 관리자 페이지
+- 서버 데이터베이스
+- 원가 계산
+- 영양 성분 계산
+- 기관별 급식 운영 정책 엔진
+
+## 검증 상태
+
+현재 기준으로 아래 항목을 통과합니다.
+
+- `npm run lint`
+- `npm run build`
+- 원본 메뉴 데이터 중복/교차 중복 정리
+- 구조화 카탈로그 생성 및 검증
+- 데스크톱 / 모바일 배포본 기본 동작 확인
+
+## 크레딧
+
+- Dev: 이지섭
+- Data: 문채영
