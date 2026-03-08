@@ -60,7 +60,9 @@ export function itemMatchesFilters(item: MenuItem, filters: MenuFilters): boolea
   if (filters.excludeSpicy && item.spicyLevel > 0) return false;
   if (filters.excludeSeafood && item.protein === 'seafood') return false;
   if (filters.excludeDairy && item.tags.includes('dairy')) return false;
-  if (filters.preferKorean && item.category !== 'dessert' && !item.tags.includes('korean')) return false;
+  if (filters.preferKorean && item.category !== 'dessert' && item.category !== 'kimchi' && !item.tags.includes('korean')) {
+    return false;
+  }
   return true;
 }
 

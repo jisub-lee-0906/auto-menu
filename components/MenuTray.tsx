@@ -72,7 +72,7 @@ export default function MenuTray({
             className="min-h-[150px]"
           />
           <MenuSlot
-            title="국 · 찌개"
+            title="국 / 찌개"
             menuItem={menu.soup}
             isLocked={lockedState.soup}
             onToggleLock={() => onToggleLock('soup')}

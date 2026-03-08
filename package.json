@@ -14,7 +14,8 @@
     "clean:data": "python scripts/clean_menu_db.py",
     "build:data": "node scripts/build_menu_catalog.mjs",
     "audit:data": "node scripts/audit_menu_db.mjs",
-    "audit:catalog": "node scripts/audit_menu_catalog.mjs"
+    "audit:catalog": "node scripts/audit_menu_catalog.mjs",
+    "audit:consistency": "node scripts/audit_menu_consistency.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",

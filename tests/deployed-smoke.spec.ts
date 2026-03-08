@@ -23,8 +23,9 @@ test('deployed home page smoke test', async ({ page }) => {
   const searchButton = page.getByTitle('메뉴 검색');
   await expect(searchButton).toBeVisible();
   await searchButton.click();
-  await expect(page.getByPlaceholder(/메뉴 이름/)).toBeVisible();
-  await page.keyboard.press('Escape');
+  await expect(page.getByPlaceholder(/메뉴 검색/)).toBeVisible();
+  await page.locator('div.fixed.inset-0.z-\\[100\\] button').click();
+  await expect(page.getByPlaceholder(/메뉴 검색/)).toBeHidden();
 
   const generateButton = page.getByRole('button', { name: '전체 다시 짜기' });
   await generateButton.click();

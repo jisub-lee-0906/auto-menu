@@ -20,8 +20,8 @@ export type LockedState = {
   [K in keyof Menu]: boolean;
 };
 
-function fallbackItem(category: MenuCategory): string {
-  const items = getFilteredCategory(category, DEFAULT_MENU_FILTERS);
+function fallbackItem(category: MenuCategory, filters: MenuFilters, excludedNames: string[] = []): string {
+  const items = getFilteredCategory(category, filters).filter((item) => !excludedNames.includes(item.name));
   return items[0]?.name ?? '';
 }
 
@@ -111,10 +111,11 @@ export function generateMenu(
       return;
     }
 
-    const chosen = chooseItem(category, nextItems, filters, [...excludeNames, ...excludedNames]);
+    const nextExcludedNames = [...excludeNames, ...excludedNames];
+    const chosen = chooseItem(category, nextItems, filters, nextExcludedNames);
     nextItems[field] = chosen ?? {
       id: `${category}-fallback`,
-      name: fallbackItem(category),
+      name: fallbackItem(category, filters, nextExcludedNames),
       category,
       tags: [],
       protein: 'other',

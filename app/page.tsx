@@ -9,7 +9,12 @@ import MenuSearch from '@/components/MenuSearch';
 import MenuTray from '@/components/MenuTray';
 import RecentMenus from '@/components/RecentMenus';
 import Toast from '@/components/Toast';
-import { DEFAULT_MENU_FILTERS, MenuFilters as MenuFilterState } from '@/lib/menuCatalog';
+import {
+  DEFAULT_MENU_FILTERS,
+  getMenuItemByName,
+  itemMatchesFilters,
+  MenuFilters as MenuFilterState,
+} from '@/lib/menuCatalog';
 import { generateMenu, LockedState, Menu } from '@/lib/menuGenerator';
 
 const INITIAL_LOCK_STATE: LockedState = {
@@ -78,6 +83,17 @@ function menuEquals(left: Menu, right: Menu): boolean {
 
 function getMenuKey(menu: Menu): string {
   return [menu.rice, menu.soup, menu.main, menu.side1, menu.side2, menu.kimchi, menu.dessert].join('|');
+}
+
+function menuMatchesActiveConstraints(menu: Menu, filters: MenuFilterState, excludedNames: string[]): boolean {
+  const names = [menu.rice, menu.soup, menu.main, menu.side1, menu.side2, menu.kimchi, menu.dessert];
+
+  return names.every((name) => {
+    if (excludedNames.includes(name)) return false;
+
+    const item = getMenuItemByName(name);
+    return !!item && itemMatchesFilters(item, filters);
+  });
 }
 
 export default function Home() {
@@ -227,6 +243,13 @@ export default function Home() {
   };
 
   const handleRestoreMenu = (selectedMenu: Menu) => {
+    if (!menuMatchesActiveConstraints(selectedMenu, filters, excludedNames)) {
+      setLocked(INITIAL_LOCK_STATE);
+      commitMenu(generateMenu(undefined, undefined, filters, excludedNames));
+      showToast('현재 필터 또는 제외 메뉴와 맞지 않아 새 조합으로 다시 추천했습니다.');
+      return;
+    }
+
     commitMenu(selectedMenu);
     setLocked(INITIAL_LOCK_STATE);
     showToast('저장된 조합을 다시 불러왔습니다.');

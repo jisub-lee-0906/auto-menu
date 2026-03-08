@@ -26,7 +26,7 @@ export default function MenuFilters({ filters, onChange }: MenuFiltersProps) {
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-[15px] font-bold text-[#191F28]">추천 조건</h2>
-            <p className="text-[13px] text-[#8B95A1] mt-1">조합 품질을 높이기 위한 기본 필터입니다.</p>
+            <p className="text-[13px] text-[#8B95A1] mt-1">조합 오차를 줄이기 위한 기본 필터입니다.</p>
           </div>
           <button
             type="button"
