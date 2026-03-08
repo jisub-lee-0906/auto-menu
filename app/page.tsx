@@ -5,17 +5,11 @@ import html2canvas from 'html2canvas';
 import ExcludedMenus from '@/components/ExcludedMenus';
 import FavoriteMenus from '@/components/FavoriteMenus';
 import MenuFilters from '@/components/MenuFilters';
-import MenuInsights from '@/components/MenuInsights';
 import MenuSearch from '@/components/MenuSearch';
 import MenuTray from '@/components/MenuTray';
 import RecentMenus from '@/components/RecentMenus';
 import Toast from '@/components/Toast';
-import {
-  DEFAULT_MENU_FILTERS,
-  getMenuItemByName,
-  MenuFilters as MenuFilterState,
-  MenuItem,
-} from '@/lib/menuCatalog';
+import { DEFAULT_MENU_FILTERS, MenuFilters as MenuFilterState } from '@/lib/menuCatalog';
 import { generateMenu, LockedState, Menu } from '@/lib/menuGenerator';
 
 const INITIAL_LOCK_STATE: LockedState = {
@@ -84,113 +78,6 @@ function menuEquals(left: Menu, right: Menu): boolean {
 
 function getMenuKey(menu: Menu): string {
   return [menu.rice, menu.soup, menu.main, menu.side1, menu.side2, menu.kimchi, menu.dessert].join('|');
-}
-
-function badgeLabel(tag: string): string {
-  const labels: Record<string, string> = {
-    korean: '한식 위주',
-    studentFavorite: '학생 선호',
-    seafood: '해산물 포함',
-    dairy: '유제품 포함',
-    spicy: '매콤한 메뉴',
-    fruit: '과일 후식',
-    light: '가벼운 구성',
-    hearty: '든든한 구성',
-    grilled: '구이 메인',
-    fried: '튀김 메인',
-    soup: '국물 포함',
-    vegetable: '채소 반찬',
-  };
-
-  return labels[tag] ?? tag;
-}
-
-function proteinSummary(item: MenuItem | undefined): string {
-  if (!item) return '균형형';
-
-  const labels: Record<MenuItem['protein'], string> = {
-    grain: '곡물형',
-    meat: '육류형',
-    seafood: '해산물형',
-    egg: '달걀형',
-    tofu: '두부형',
-    vegetable: '채소형',
-    fruit: '과일형',
-    dairy: '유제품형',
-    mixed: '복합형',
-    other: '균형형',
-  };
-
-  return labels[item.protein];
-}
-
-function buildMenuInsights(menu: Menu): {
-  title: string;
-  summary: string;
-  description: string;
-  details: string[];
-  badges: string[];
-} {
-  const mainItem = getMenuItemByName(menu.main);
-  const sideItems = [menu.side1, menu.side2].map(getMenuItemByName).filter(Boolean) as MenuItem[];
-  const dessertItem = getMenuItemByName(menu.dessert);
-  const soupItem = getMenuItemByName(menu.soup);
-
-  const badges = new Set<string>();
-
-  if (mainItem?.tags.includes('korean')) badges.add('korean');
-  if (mainItem?.tags.includes('student-favorite')) badges.add('studentFavorite');
-  if (mainItem?.protein === 'seafood' || mainItem?.tags.includes('seafood')) badges.add('seafood');
-  if (dessertItem?.protein === 'dairy' || dessertItem?.tags.includes('dairy')) badges.add('dairy');
-  if ((mainItem?.spicyLevel ?? 0) > 0 || sideItems.some((item) => item.spicyLevel > 0)) badges.add('spicy');
-  if (dessertItem?.protein === 'fruit') badges.add('fruit');
-  if (mainItem?.mealWeight === 'heavy') badges.add('hearty');
-  if (sideItems.some((item) => item.protein === 'vegetable')) badges.add('vegetable');
-  if (mainItem?.cookingMethod === 'grilled') badges.add('grilled');
-  if (mainItem?.cookingMethod === 'fried') badges.add('fried');
-  if (soupItem) badges.add('soup');
-  if ((mainItem?.mealWeight ?? 'medium') === 'light' && sideItems.every((item) => item.mealWeight !== 'heavy')) {
-    badges.add('light');
-  }
-
-  const cookingSummary: Record<MenuItem['cookingMethod'], string> = {
-    rice: '밥 중심으로 무난하게 이어지는 조합입니다.',
-    soup: '국물과 자연스럽게 맞물리는 구성입니다.',
-    'stir-fry': '볶음 메인을 중심으로 익숙한 선호도를 노린 조합입니다.',
-    fried: '메인이 강해서 반찬은 무겁지 않게 맞춘 조합입니다.',
-    grilled: '구이 메인이라 급식 식판에 안정적으로 잘 들어맞습니다.',
-    braised: '양념 메인에 반찬 대비를 준 구성입니다.',
-    steamed: '자극이 세지 않아 편하게 먹기 좋은 조합입니다.',
-    raw: '상대적으로 산뜻한 결이 살아 있는 조합입니다.',
-    salad: '가벼운 흐름을 유지한 조합입니다.',
-    noodle: '면류 특성을 해치지 않도록 곁들임을 눌러 잡은 조합입니다.',
-    baked: '간식형 만족감을 살린 구성입니다.',
-    dessert: '후식까지 자연스럽게 연결되는 구성입니다.',
-    other: '메인과 반찬의 충돌을 줄인 무난한 조합입니다.',
-  };
-
-  const sideBalance = sideItems.some((item) => item.protein === 'vegetable')
-    ? '반찬에는 채소 계열을 넣어 전체 무게를 눌렀습니다.'
-    : '반찬은 메인과 조리법이 겹치지 않게 배치했습니다.';
-
-  const dessertBalance =
-    dessertItem?.protein === 'fruit'
-      ? '후식은 과일 계열로 마무리해 식사 뒤 느낌이 가볍습니다.'
-      : dessertItem?.protein === 'dairy'
-        ? '후식은 유제품 계열이라 만족감을 더해줍니다.'
-        : '후식까지 포함해 급식형 흐름이 자연스럽게 이어집니다.';
-
-  const summary = `${proteinSummary(mainItem)} 메인 + ${
-    sideItems.some((item) => item.protein === 'vegetable') ? '채소 반찬' : '균형 반찬'
-  } + ${dessertItem?.protein === 'fruit' ? '가벼운 후식' : '마무리 후식'}`;
-
-  return {
-    title: mainItem ? `${menu.main} 중심 추천` : `${menu.main} 추천`,
-    summary,
-    description: mainItem ? cookingSummary[mainItem.cookingMethod] : '메인 반찬을 중심으로 무난하게 정리한 구성입니다.',
-    details: [sideBalance, dessertBalance],
-    badges: Array.from(badges).slice(0, 5).map(badgeLabel),
-  };
 }
 
 export default function Home() {
@@ -275,7 +162,6 @@ export default function Home() {
     };
   }, []);
 
-  const insights = useMemo(() => (menu ? buildMenuInsights(menu) : null), [menu]);
   const isCurrentFavorite = useMemo(
     () => (menu ? favoriteMenus.some((item) => menuEquals(item, menu)) : false),
     [favoriteMenus, menu]
@@ -440,15 +326,6 @@ export default function Home() {
       <main className="flex-grow px-5 flex flex-col">
         <MenuFilters filters={filters} onChange={handleFiltersChange} />
         <ExcludedMenus items={excludedNames} onRemove={handleRemoveExcludedName} onClear={handleClearExcludedNames} />
-        {insights ? (
-          <MenuInsights
-            title={insights.title}
-            summary={insights.summary}
-            description={insights.description}
-            details={insights.details}
-            badges={insights.badges}
-          />
-        ) : null}
         <FavoriteMenus items={favoriteMenus} onSelect={handleRestoreMenu} />
         <RecentMenus items={recentMenus.slice(1)} onSelect={handleRestoreMenu} />
 
