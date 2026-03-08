@@ -473,13 +473,13 @@ export default function Home() {
       <footer className="w-full text-center py-8 opacity-60 hover:opacity-100 transition-opacity duration-300">
         <div className="inline-flex items-center justify-center gap-3 text-[12px] font-medium text-[#8B95A1] tracking-tight">
           <span className="flex items-center gap-1.5">
-            <span className="uppercase text-[10px] font-bold text-[#B0B8C1] tracking-wider">UI</span>
-            <span className="text-[#4E5968]">Auto Menu App</span>
+            <span className="uppercase text-[10px] font-bold text-[#B0B8C1] tracking-wider">Dev</span>
+            <span className="text-[#4E5968]">이지섭</span>
           </span>
           <span className="w-0.5 h-2.5 bg-[#E5E8EB] rounded-full"></span>
           <span className="flex items-center gap-1.5">
             <span className="uppercase text-[10px] font-bold text-[#B0B8C1] tracking-wider">Data</span>
-            <span className="text-[#4E5968]">Menu Catalog</span>
+            <span className="text-[#4E5968]">문채영</span>
           </span>
         </div>
       </footer>
