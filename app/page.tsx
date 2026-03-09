@@ -328,7 +328,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col font-sans selection:bg-[#3182F6] selection:text-white pb-32">
       {toastMessage ? <Toast message={toastMessage} /> : null}
 
-      <header className="pt-10 pb-4 px-6 max-w-2xl mx-auto w-full flex items-start justify-between">
+      <header className="pt-10 pb-4 px-5 sm:px-6 max-w-2xl mx-auto w-full flex items-start justify-between">
         <div>
           <h1 className="text-[32px] font-bold tracking-tighter text-[#191F28] leading-tight">오늘의 급식</h1>
           <p className="text-[#8B95A1] text-lg mt-1 tracking-tight">영양사는 가볍게, 식단은 더 정교하게.</p>
@@ -346,14 +346,14 @@ export default function Home() {
 
       {isSearchOpen ? <MenuSearch onClose={() => setIsSearchOpen(false)} /> : null}
 
-      <main className="flex-grow px-5 flex flex-col">
+      <main className="flex-grow flex flex-col">
         <MenuFilters filters={filters} onChange={handleFiltersChange} />
         <ExcludedMenus items={excludedNames} onRemove={handleRemoveExcludedName} onClear={handleClearExcludedNames} />
         <FavoriteMenus items={favoriteMenus} onSelect={handleRestoreMenu} />
         <RecentMenus items={recentMenus.slice(1)} onSelect={handleRestoreMenu} />
 
         {menu ? (
-          <div ref={trayRef} className="w-full flex justify-center py-2">
+          <div ref={trayRef} className="w-full max-w-2xl mx-auto px-5 sm:px-6 py-2">
             <MenuTray
               menu={menu}
               lockedState={locked}
@@ -384,13 +384,13 @@ export default function Home() {
         </div>
       </footer>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 z-50 pointer-events-none">
-        <div className="max-w-md mx-auto flex items-stretch gap-3 pointer-events-auto transition-transform duration-500 ease-out transform translate-y-0">
+      <div className="px-4 pt-4 pb-6 pointer-events-none md:fixed md:bottom-0 md:left-0 md:right-0 md:p-6 md:z-50">
+        <div className="max-w-sm md:max-w-md mx-auto flex flex-col sm:flex-row items-stretch gap-3 pointer-events-auto transition-transform duration-500 ease-out transform translate-y-0">
           <button
             onClick={handleGenerateValues}
             disabled={isGenerating}
             className={`
-              flex-grow flex items-center justify-center gap-2 py-4 px-6 rounded-[20px]
+              w-full sm:flex-grow flex items-center justify-center gap-2 py-4 px-6 rounded-[20px]
               text-white font-bold text-[17px] shadow-lg shadow-blue-500/30
               transition-all active:scale-[0.96] duration-200
               ${isGenerating ? 'bg-[#B0B8C1] cursor-not-allowed' : 'bg-[#3182F6] hover:bg-[#2C75DE]'}
@@ -413,10 +413,10 @@ export default function Home() {
             )}
           </button>
 
-          <div className="flex bg-white rounded-[20px] shadow-lg shadow-black/5 items-center p-1.5 gap-1">
+          <div className="grid grid-cols-3 sm:flex bg-white rounded-[20px] shadow-lg shadow-black/5 items-center p-1.5 gap-1">
             <button
               onClick={handleToggleFavorite}
-              className={`w-12 h-full flex items-center justify-center rounded-[16px] transition-colors ${
+              className={`h-12 sm:w-12 flex items-center justify-center rounded-[16px] transition-colors ${
                 isCurrentFavorite ? 'bg-[#FFF7D6] text-[#D89B00]' : 'hover:bg-[#F2F4F6] text-[#4E5968]'
               }`}
               title={isCurrentFavorite ? '즐겨찾기 해제' : '즐겨찾기 저장'}
@@ -430,10 +430,10 @@ export default function Home() {
                 />
               </svg>
             </button>
-            <div className="w-px h-4 bg-[#E5E8EB]"></div>
+            <div className="hidden sm:block w-px h-4 bg-[#E5E8EB]"></div>
             <button
               onClick={copyToClipboard}
-              className="w-12 h-full flex items-center justify-center rounded-[16px] hover:bg-[#F2F4F6] text-[#4E5968] transition-colors"
+              className="h-12 sm:w-12 flex items-center justify-center rounded-[16px] hover:bg-[#F2F4F6] text-[#4E5968] transition-colors"
               title="텍스트로 복사"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -445,10 +445,10 @@ export default function Home() {
                 />
               </svg>
             </button>
-            <div className="w-px h-4 bg-[#E5E8EB]"></div>
+            <div className="hidden sm:block w-px h-4 bg-[#E5E8EB]"></div>
             <button
               onClick={saveAsImage}
-              className="w-12 h-full flex items-center justify-center rounded-[16px] hover:bg-[#F2F4F6] text-[#4E5968] transition-colors"
+              className="h-12 sm:w-12 flex items-center justify-center rounded-[16px] hover:bg-[#F2F4F6] text-[#4E5968] transition-colors"
               title="이미지로 저장"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

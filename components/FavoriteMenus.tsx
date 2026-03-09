@@ -1,5 +1,6 @@
 'use client';
 
+import SectionShell from '@/components/SectionShell';
 import { Menu } from '@/lib/menuGenerator';
 
 interface FavoriteMenusProps {
@@ -15,7 +16,7 @@ export default function FavoriteMenus({ items, onSelect }: FavoriteMenusProps) {
   if (items.length === 0) return null;
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-5 pb-3">
+    <SectionShell className="pb-3">
       <div className="rounded-[24px] bg-[#FFFDF4] border border-[#F6E7A8] shadow-[0_2px_12px_rgba(216,155,0,0.08)] p-4">
         <div>
           <h2 className="text-[15px] font-bold text-[#191F28]">즐겨찾기</h2>
@@ -40,6 +41,6 @@ export default function FavoriteMenus({ items, onSelect }: FavoriteMenusProps) {
           ))}
         </div>
       </div>
-    </div>
+    </SectionShell>
   );
 }

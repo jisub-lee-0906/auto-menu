@@ -1,5 +1,6 @@
 'use client';
 
+import SectionShell from '@/components/SectionShell';
 import { DEFAULT_MENU_FILTERS } from '@/lib/menuCatalog';
 import type { MenuFilters as MenuFilterState } from '@/lib/menuCatalog';
 
@@ -21,7 +22,7 @@ const FILTER_OPTIONS: Array<{
 
 export default function MenuFilters({ filters, onChange }: MenuFiltersProps) {
   return (
-    <div className="w-full max-w-2xl mx-auto px-5 pb-3">
+    <SectionShell className="pb-3">
       <div className="rounded-[24px] bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] border border-gray-100 p-4">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -70,6 +71,6 @@ export default function MenuFilters({ filters, onChange }: MenuFiltersProps) {
           })}
         </div>
       </div>
-    </div>
+    </SectionShell>
   );
 }

@@ -34,13 +34,15 @@ export default function MenuSlot({
             `}
         >
             {/* Header: Title & Controls */}
-            <div className="flex justify-between items-start mb-1">
-                <div className="flex flex-col">
+            <div className="relative mb-2 min-h-[3.5rem] pt-10">
+                <div className="flex flex-col min-w-0 pr-16">
                     {/* Subtitle is hidden or very subtle in minimal design, treating Title as the main label */}
-                    <h3 className="text-[13px] font-semibold text-[#8B95A1] tracking-tight">{title}</h3>
+                    <h3 className="text-[14px] font-semibold text-[#6B7684] tracking-tight leading-snug break-keep md:whitespace-nowrap">
+                        {title}
+                    </h3>
                 </div>
 
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 mobile-always-visible z-10">
+                <div className="absolute top-0 right-0 flex gap-1 shrink-0 z-10">
                     {/* Lock Button */}
                     <button
                         onClick={(e) => { e.stopPropagation(); onToggleLock(); }}
@@ -79,9 +81,9 @@ export default function MenuSlot({
             </div>
 
             {/* Content */}
-            <div className="flex-grow flex items-center justify-center py-1 w-full">
+            <div className="flex-grow flex items-center justify-center py-0.5 w-full">
                 <p className={`
-                    w-full text-center font-bold leading-normal break-words pb-1
+                    w-full text-center font-bold leading-normal break-words pb-1 -translate-y-[0.875rem]
                     ${isLocked ? 'text-[#8B95A1]' : 'text-[#191F28]'}
                     text-[15px]
                     line-clamp-4
@@ -92,11 +94,6 @@ export default function MenuSlot({
 
             <style jsx>{`
                 .ease-spring { transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-                @media (hover: none) {
-                    .mobile-always-visible {
-                        opacity: 1 !important;
-                    }
-                }
             `}</style>
         </div>
     );

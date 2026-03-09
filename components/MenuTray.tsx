@@ -30,25 +30,25 @@ export default function MenuTray({
             onToggleLock={() => onToggleLock('main')}
             onRefresh={() => onRefreshItem('main')}
             onExclude={() => onExcludeItem('main')}
-            className="lg:col-span-1 min-h-[140px]"
+            className="lg:col-span-1 min-h-[172px]"
           />
           <MenuSlot
-            title="반찬 1"
+            title="서브 반찬"
             menuItem={menu.side1}
             isLocked={lockedState.side1}
             onToggleLock={() => onToggleLock('side1')}
             onRefresh={() => onRefreshItem('side1')}
             onExclude={() => onExcludeItem('side1')}
-            className="min-h-[140px]"
+            className="min-h-[172px]"
           />
           <MenuSlot
-            title="반찬 2"
+            title="서브 반찬"
             menuItem={menu.side2}
             isLocked={lockedState.side2}
             onToggleLock={() => onToggleLock('side2')}
             onRefresh={() => onRefreshItem('side2')}
             onExclude={() => onExcludeItem('side2')}
-            className="min-h-[140px]"
+            className="min-h-[172px]"
           />
           <MenuSlot
             title="김치"
@@ -57,7 +57,7 @@ export default function MenuTray({
             onToggleLock={() => onToggleLock('kimchi')}
             onRefresh={() => onRefreshItem('kimchi')}
             onExclude={() => onExcludeItem('kimchi')}
-            className="min-h-[140px]"
+            className="min-h-[172px]"
           />
         </div>
 
@@ -69,7 +69,7 @@ export default function MenuTray({
             onToggleLock={() => onToggleLock('rice')}
             onRefresh={() => onRefreshItem('rice')}
             onExclude={() => onExcludeItem('rice')}
-            className="min-h-[150px]"
+            className="min-h-[180px]"
           />
           <MenuSlot
             title="국 / 찌개"
@@ -78,12 +78,12 @@ export default function MenuTray({
             onToggleLock={() => onToggleLock('soup')}
             onRefresh={() => onRefreshItem('soup')}
             onExclude={() => onExcludeItem('soup')}
-            className="min-h-[150px]"
+            className="min-h-[180px]"
           />
         </div>
       </div>
 
-      <div className="mx-auto max-w-sm pt-2">
+      <div className="w-full pt-2">
         <MenuSlot
           title="후식"
           menuItem={menu.dessert}
@@ -91,7 +91,7 @@ export default function MenuTray({
           onToggleLock={() => onToggleLock('dessert')}
           onRefresh={() => onRefreshItem('dessert')}
           onExclude={() => onExcludeItem('dessert')}
-          className="min-h-[100px] bg-gradient-to-br from-white to-[#F9FAFB]"
+          className="min-h-[172px] bg-gradient-to-br from-white to-[#F9FAFB]"
         />
       </div>
     </div>

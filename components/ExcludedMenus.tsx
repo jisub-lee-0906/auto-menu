@@ -1,5 +1,7 @@
 'use client';
 
+import SectionShell from '@/components/SectionShell';
+
 interface ExcludedMenusProps {
   items: string[];
   onRemove: (name: string) => void;
@@ -10,7 +12,7 @@ export default function ExcludedMenus({ items, onRemove, onClear }: ExcludedMenu
   if (items.length === 0) return null;
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-5 pb-3">
+    <SectionShell className="pb-3">
       <div className="rounded-[24px] bg-white border border-gray-100 shadow-[0_2px_12px_rgba(0,0,0,0.04)] p-4">
         <div className="flex items-center justify-between gap-3">
           <div>
@@ -38,6 +40,6 @@ export default function ExcludedMenus({ items, onRemove, onClear }: ExcludedMenu
           ))}
         </div>
       </div>
-    </div>
+    </SectionShell>
   );
 }

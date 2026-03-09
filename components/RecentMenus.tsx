@@ -1,5 +1,6 @@
 'use client';
 
+import SectionShell from '@/components/SectionShell';
 import { Menu } from '@/lib/menuGenerator';
 
 interface RecentMenusProps {
@@ -15,7 +16,7 @@ export default function RecentMenus({ items, onSelect }: RecentMenusProps) {
   if (items.length === 0) return null;
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-5 pb-3">
+    <SectionShell className="pb-3">
       <div className="rounded-[24px] bg-white border border-gray-100 shadow-[0_2px_12px_rgba(0,0,0,0.04)] p-4">
         <div>
           <h2 className="text-[15px] font-bold text-[#191F28]">최근 조합</h2>
@@ -40,6 +41,6 @@ export default function RecentMenus({ items, onSelect }: RecentMenusProps) {
           ))}
         </div>
       </div>
-    </div>
+    </SectionShell>
   );
 }
