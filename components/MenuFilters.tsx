@@ -58,7 +58,7 @@ export default function MenuFilters({ filters, onChange }: MenuFiltersProps) {
                     {option.label}
                   </span>
                   <span
-                    className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${
+                    className={`inline-flex h-5 min-w-[2rem] items-center justify-center rounded-full px-1 text-[11px] font-bold ${
                       checked ? 'bg-[#3182F6] text-white' : 'bg-[#E5E8EB] text-[#8B95A1]'
                     }`}
                   >
