@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "오늘의 급식 - Auto Meal",
+  title: "오늘의 급식",
   description: "클릭 한 번으로 받아보는 균형 잡힌 랜덤 식단표",
 };
 
