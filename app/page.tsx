@@ -331,7 +331,7 @@ export default function Home() {
       <header className="pt-10 pb-4 px-5 sm:px-6 max-w-2xl mx-auto w-full flex items-start justify-between">
         <div>
           <h1 className="text-[32px] font-bold tracking-tighter text-[#191F28] leading-tight">오늘의 급식</h1>
-          <p className="text-[#8B95A1] text-lg mt-1 tracking-tight">영양사는 가볍게, 식단은 더 정교하게.</p>
+          <p className="text-[#8B95A1] text-lg mt-1 tracking-tight">영양은 든든하게, 식단은 정교하게</p>
         </div>
         <button
           onClick={() => setIsSearchOpen(true)}
