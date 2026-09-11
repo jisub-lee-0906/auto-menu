@@ -1,6 +1,7 @@
 import {
   DEFAULT_MENU_FILTERS,
   getFilteredCategory,
+  getMenuItemByName,
   MenuCategory,
   MenuFilters,
   MenuItem,
@@ -20,35 +21,51 @@ export type LockedState = {
   [K in keyof Menu]: boolean;
 };
 
-function fallbackItem(category: MenuCategory, filters: MenuFilters, excludedNames: string[] = []): string {
-  const items = getFilteredCategory(category, filters).filter((item) => !excludedNames.includes(item.name));
-  return items[0]?.name ?? '';
+const SLOT_CATEGORY: Record<keyof Menu, MenuCategory> = {
+  rice: 'rice',
+  soup: 'soup',
+  main: 'main',
+  side1: 'side',
+  side2: 'side',
+  kimchi: 'kimchi',
+  dessert: 'dessert',
+};
+
+const SLOT_KEYS = Object.keys(SLOT_CATEGORY) as (keyof Menu)[];
+
+function customItem(name: string, category: MenuCategory): MenuItem {
+  return {
+    id: `${category}-custom`,
+    name,
+    category,
+    tags: [],
+    protein: 'other',
+    cookingMethod: 'other',
+    spicyLevel: 0,
+    mealWeight: 'medium',
+  };
 }
 
-function scoreItem(item: MenuItem, selected: Partial<Record<keyof Menu, MenuItem>>): number {
-  let score = Math.random() * 0.25;
+function itemForLockedValue(name: string, category: MenuCategory): MenuItem {
+  return getMenuItemByName(name) ?? customItem(name, category);
+}
 
-  const selectedItems = Object.values(selected).filter(Boolean);
+function scoreItem(
+  item: MenuItem,
+  selected: Partial<Record<keyof Menu, MenuItem>>,
+  preferKorean: boolean,
+): number {
+  let score = Math.random() * 0.25;
+  const selectedItems = Object.values(selected).filter((picked): picked is MenuItem => Boolean(picked));
 
   for (const picked of selectedItems) {
-    if (!picked) continue;
-
-    if (picked.name === item.name) {
-      return -100;
-    }
-
-    if (picked.protein === item.protein && item.category === 'side') {
-      score -= 2;
-    }
-
-    if (picked.cookingMethod === item.cookingMethod && item.category === 'side') {
-      score -= 1.5;
-    }
-
-    if (picked.mealWeight === 'heavy' && item.mealWeight === 'heavy' && item.category !== 'dessert') {
-      score -= 1;
-    }
+    if (picked.name === item.name) return -100;
+    if (picked.protein === item.protein && item.category === 'side') score -= 2;
+    if (picked.cookingMethod === item.cookingMethod && item.category === 'side') score -= 1.5;
+    if (picked.mealWeight === 'heavy' && item.mealWeight === 'heavy' && item.category !== 'dessert') score -= 1;
   }
+
+  if (preferKorean && item.tags.includes('korean')) score += 1.25;
 
   if (item.category === 'main') {
     if (item.protein === 'meat' || item.protein === 'seafood') score += 2;
@@ -74,64 +91,54 @@ function chooseItem(
   category: MenuCategory,
   selected: Partial<Record<keyof Menu, MenuItem>>,
   filters: MenuFilters,
-  excludeNames: string[] = []
+  excludedNames: ReadonlySet<string>,
+  previousName?: string,
 ): MenuItem | null {
-  const pool = getFilteredCategory(category, filters).filter((item) => !excludeNames.includes(item.name));
-  if (pool.length === 0) return null;
+  // preferKorean is deliberately ranking-only, even if an older catalog helper
+  // still treats it as a filter.
+  const hardFilters = { ...filters, preferKorean: false };
+  const eligible = getFilteredCategory(category, hardFilters).filter((item) => !excludedNames.has(item.name));
+  if (eligible.length === 0) return null;
 
-  const ranked = [...pool]
-    .map((item) => ({ item, score: scoreItem(item, selected) }))
-    .sort((a, b) => b.score - a.score);
-
+  const alternatives = previousName ? eligible.filter((item) => item.name !== previousName) : eligible;
+  const pool = alternatives.length > 0 ? alternatives : eligible;
+  const ranked = pool
+    .map((item) => ({ item, score: scoreItem(item, selected, filters.preferKorean) }))
+    .sort((left, right) => right.score - left.score);
   const finalistCount = Math.min(6, ranked.length);
-  const finalist = ranked[Math.floor(Math.random() * finalistCount)].item;
-  return finalist;
+  return ranked[Math.floor(Math.random() * finalistCount)].item;
 }
 
 export function generateMenu(
   currentMenu?: Menu,
   lockedState?: LockedState,
   filters: MenuFilters = DEFAULT_MENU_FILTERS,
-  excludedNames: string[] = []
+  excludedNames: string[] = [],
 ): Menu {
   const nextItems: Partial<Record<keyof Menu, MenuItem>> = {};
 
-  const assignField = (field: keyof Menu, category: MenuCategory, excludeNames: string[] = []) => {
-    if (lockedState?.[field] && currentMenu?.[field]) {
-      nextItems[field] = {
-        id: `${category}-locked`,
-        name: currentMenu[field],
-        category,
-        tags: [],
-        protein: 'other',
-        cookingMethod: 'other',
-        spicyLevel: 0,
-        mealWeight: 'medium',
-      };
-      return;
+  // Preloading every lock makes metadata and collision checks independent of
+  // generation order. Locked values intentionally bypass filters/exclusions.
+  for (const field of SLOT_KEYS) {
+    if (lockedState?.[field] && currentMenu) {
+      nextItems[field] = itemForLockedValue(currentMenu[field], SLOT_CATEGORY[field]);
     }
+  }
 
-    const nextExcludedNames = [...excludeNames, ...excludedNames];
-    const chosen = chooseItem(category, nextItems, filters, nextExcludedNames);
-    nextItems[field] = chosen ?? {
-      id: `${category}-fallback`,
-      name: fallbackItem(category, filters, nextExcludedNames),
-      category,
-      tags: [],
-      protein: 'other',
-      cookingMethod: 'other',
-      spicyLevel: 0,
-      mealWeight: 'medium',
-    };
+  const assignGenerated = (field: keyof Menu, category: MenuCategory, structuralExcludes: string[] = []) => {
+    if (lockedState?.[field] && currentMenu) return;
+    const exclusions = new Set([...excludedNames, ...structuralExcludes.filter(Boolean)]);
+    nextItems[field] =
+      chooseItem(category, nextItems, filters, exclusions, currentMenu?.[field]) ?? customItem('', category);
   };
 
-  assignField('rice', 'rice');
-  assignField('soup', 'soup');
-  assignField('main', 'main');
-  assignField('side1', 'side', [nextItems.main?.name ?? '']);
-  assignField('side2', 'side', [nextItems.main?.name ?? '', nextItems.side1?.name ?? '']);
-  assignField('kimchi', 'kimchi');
-  assignField('dessert', 'dessert');
+  assignGenerated('rice', 'rice');
+  assignGenerated('soup', 'soup');
+  assignGenerated('main', 'main');
+  assignGenerated('side1', 'side', [nextItems.main?.name ?? '', nextItems.side2?.name ?? '']);
+  assignGenerated('side2', 'side', [nextItems.main?.name ?? '', nextItems.side1?.name ?? '']);
+  assignGenerated('kimchi', 'kimchi');
+  assignGenerated('dessert', 'dessert');
 
   return {
     rice: nextItems.rice?.name ?? '',

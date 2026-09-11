@@ -25,6 +25,10 @@ export type CookingMethod =
   | 'noodle'
   | 'baked'
   | 'dessert'
+  | 'seasoned'
+  | 'boiled'
+  | 'fermented'
+  | 'smoked'
   | 'other';
 export type MealWeight = 'light' | 'medium' | 'heavy';
 
@@ -58,11 +62,9 @@ for (const items of Object.values(menuCatalog)) {
 
 export function itemMatchesFilters(item: MenuItem, filters: MenuFilters): boolean {
   if (filters.excludeSpicy && item.spicyLevel > 0) return false;
-  if (filters.excludeSeafood && item.protein === 'seafood') return false;
+  if (filters.excludeSeafood && item.tags.includes('seafood')) return false;
   if (filters.excludeDairy && item.tags.includes('dairy')) return false;
-  if (filters.preferKorean && item.category !== 'dessert' && item.category !== 'kimchi' && !item.tags.includes('korean')) {
-    return false;
-  }
+  // preferKorean is a ranking preference applied by the menu generator, not an exclusion.
   return true;
 }
 

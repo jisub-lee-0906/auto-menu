@@ -1,45 +1,16 @@
 import fs from 'node:fs';
-import path from 'node:path';
-
-const menuCatalog = JSON.parse(
-  fs.readFileSync(path.resolve('data/menu_catalog.json'), 'utf8')
-);
-
-const categories = ['rice', 'soup', 'main', 'side', 'kimchi', 'dessert'];
-const requiredFields = ['id', 'name', 'category', 'tags', 'protein', 'cookingMethod', 'spicyLevel', 'mealWeight'];
-
-const allItems = [];
-
-for (const category of categories) {
-  const items = menuCatalog[category];
-  console.log(`${category}: total=${items.length}`);
-
-  for (const item of items) {
-    allItems.push(item);
-
-    for (const field of requiredFields) {
-      if (!(field in item)) {
-        throw new Error(`Missing field "${field}" in ${category} item ${JSON.stringify(item)}`);
-      }
-    }
-
-    if (item.category !== category) {
-      throw new Error(`Category mismatch for ${item.id}: expected ${category}, got ${item.category}`);
-    }
-  }
-}
-
-const duplicateIds = allItems.length - new Set(allItems.map((item) => item.id)).size;
-const duplicateNamesByCategory = [];
-
-for (const category of categories) {
-  const names = menuCatalog[category].map((item) => item.name);
-  const duplicateCount = names.length - new Set(names).size;
-  if (duplicateCount > 0) {
-    duplicateNamesByCategory.push(`${category}: ${duplicateCount}`);
-  }
-}
-
-console.log('');
-console.log(`duplicate_ids=${duplicateIds}`);
-console.log(`duplicate_names_by_category=${duplicateNamesByCategory.length ? duplicateNamesByCategory.join(', ') : 'none'}`);
+import assert from 'node:assert/strict';
+import { validateCurated } from './curated-catalog.mjs';
+import { validateProvenance } from './curation-provenance.mjs';
+const data = new URL('../data/', import.meta.url);
+const read = name => JSON.parse(fs.readFileSync(new URL(name, data), 'utf8'));
+const source = read('menu_curated.json');
+const expected = validateCurated(source);
+const ledger = JSON.parse(fs.readFileSync(new URL('../docs/data-curation-decisions.json', import.meta.url), 'utf8'));
+const snapshot = fs.readFileSync(new URL('../docs/menu-source-snapshot.json', import.meta.url), 'utf8');
+validateProvenance(source, ledger, snapshot);
+assert.deepEqual(read('menu_catalog.json'), expected, 'Generated catalog drift: run npm run build:data');
+assert.deepEqual(read('menu_db.json'), Object.fromEntries(Object.entries(expected).map(([c, items]) => [c, items.map(x => x.name)])), 'Raw names drift');
+assert.deepEqual(read('menu_catalog_overrides.json'), {}, 'Legacy overrides must not override reviewed metadata');
+assert.deepEqual(read('menu_catalog_review_candidates.json'), [], 'No pending review queue in operating data');
+console.log(JSON.stringify({total: source.items.length, byCategory: Object.fromEntries(Object.entries(expected).map(([c, a]) => [c, a.length])), removed: ledger.originalCount-source.items.length, unresolved: 0, invariant_failures: 0}, null, 2));

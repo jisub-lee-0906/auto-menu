@@ -1,51 +1,50 @@
-# Menu Data Policy
+# 메뉴 데이터 정책
 
-## Purpose
+## 운영 원칙
 
-This project follows Korean institutional meal-planning conventions.
-Each menu item should be stored in the single category that best matches how a school or cafeteria nutritionist would present it on a real menu board.
+메뉴 수보다 이름·슬롯·추천 속성의 해석 가능성을 우선한다. 사용자의 명시적 삭제 승인에 따라, 불필요하거나 모호한 항목은 검토 대기열에 두지 않고 운영 데이터에서 제외한다. 삭제 기록은 복구·감사 목적이며 앱에서 읽지 않는다.
 
-## Categories
+검수 범위는 한국 급식 식단의 아이디어로 해석 가능한 음식 이름, 식단 슬롯, 추천용 속성이다. 실제 학교 사용 이력, 표준 레시피, 제공량, 영양성분, 원재료표나 교차접촉을 검증한 자료가 아니다. 이번 정리는 AI를 이용한 이름 기반 보수적 편집이며 영양교사 또는 식품안전 전문가의 인증이 아니다.
 
-### `rice`
+## 분류
 
-- Staple grain dishes and rice-based one-bowl dishes
-- Examples: `흑미밥`, `비빔밥`, `덮밥`, `볶음밥`, `죽`, `주먹밥`, `김밥`
+- rice: 밥·볶음밥·덮밥·비빔밥·죽 등 주식. 내용물이 불명확한 상품명/혼합 세트 제외.
+- soup: 국·탕·찌개. 독립 주식인 면 요리나 단순 소스, 역할이 모호한 항목 제외.
+- main: 이름에서 음식 정체성을 파악할 수 있는 육류·생선·계란·두부 등의 주찬.
+- side: 채소·나물·무침·조림 등 보조 반찬. 주찬과의 역할이 불명확하면 임의 이동 대신 제외.
+- kimchi: 명확한 김치·깍두기·물김치·겉절이. 일반 나물이나 피클을 김치로 간주하지 않음.
+- dessert: 구체적인 과일·유제품·음료·떡·제과류 등의 후식 아이디어. 후식에 섞인 국·생선요리·양념 소스·일반 부찬 제외. 과자/후식의 등재가 영양적 권장이나 적정 제공빈도를 뜻하지 않음.
 
-### `soup`
+## 남기는 기준 / 삭제 사유
 
-- Soups, broths, stews, tang, guk, jjigae, noodles served as soup dishes, and soup-style items
-- Examples: `미역국`, `된장찌개`, `갈비탕`, `칼국수`, `우동국`, `수제비국`
+1. 음식 정체성과 해당 슬롯을 비교적 명확하게 해석할 수 있는 이름을 남긴다. 기존 추론기가 값을 채웠다는 이유만으로 남기지 않는다.
+2. 브랜드·행사·효능·상품 수식에 의존하거나 내용이 잘린 이름은 제외한다.
+3. 단독 식재료/소스 등 메뉴로 보기 어려운 조각, 슬롯이 잘못되었거나 모호한 항목은 제외한다. 단독 생과일명은 완성된 후식명으로 허용한다.
+4. 표기 차이, 명확한 재료 순서 차이와 같은 동일 음식의 별칭을 실제 원본에 있는 대표 이름으로 통합한다. 다른 소스·조리법·명확한 식재료 차이는 무조건 합치지 않는다.
+5. `outside-reviewed-dish-set`는 이름만으로 충분히 확정하지 못해 보수적으로 제외했다는 뜻이다. 해당 음식이 실제로 틀렸거나 급식에 절대 부적합하다는 판정이 아니다.
+6. 삭제된 이름을 임의로 고쳐 새 메뉴를 발명하지 않는다. 남은 이름/ID/카테고리는 삭제 전 출처와 대조하며 ID의 빈 번호를 다시 채우지 않는다.
 
-### `main`
+## 추천 메타데이터의 신뢰 범위
 
-- Main protein dish or dominant entree served as the primary side
-- Includes meat, fish, poultry, tofu-based entree, substantial fried or grilled dishes, and entree-style convenience foods
-- Examples: `불고기`, `치킨`, `생선까스`, `족발`, `함박스테이크`, `카츠`
+- `protein`은 추천 조합용 대략적인 식품군이다. 단백질 함량이나 실제 주원료 비율이 아니다. 밥류는 grain처럼 식단 역할을 반영한다.
+- `cookingMethod`는 메뉴명과 통상적인 음식에서 파악한 조리 유형이다. `seasoned`는 무침·나물 등으로, 재료가 생것이라는 뜻이 아니다. `boiled`는 삶음/데침/죽, `fermented`는 김치류, `smoked`는 이름에 명시된 훈제 유형이다. 실제 가열·숙성 시간/안전성을 의미하지 않는다.
+- `seafood`, `dairy`, `spicy`는 이름 및 일반적인 음식 구성에서 확인하거나 보수적으로 포함한 선호 필터용 힌트다. 예를 들어 제과류의 유제품 가능성은 보수적으로 제외할 수 있다. 소스·육수·제품별 배합의 숨은 성분을 모두 잡아내지 못한다.
+- `spicyLevel`, `mealWeight`는 추정 추천 힌트이며 실제 매운 정도, 열량, 제공량을 측정한 수치가 아니다.
+- 근거 없는 `student-favorite` 태그를 사용하지 않는다. `preferKorean`은 제외 조건이 아니라 소프트 추천 선호다.
+- 운영 데이터에는 `other`를 허용하지 않는다. 사용자 직접 입력/과거 저장 초안은 별도이며 미확인 속성을 가질 수 있다.
 
-### `side`
+## 단일 원본과 재발 방지
 
-- Supporting side dishes, vegetable dishes, small plates, light fried items, namul, muchim, jeon, jorim, kim-based dishes, pickles, and snack-like side items
-- Examples: `시금치나물`, `감자조림`, `멸치볶음`, `부추전`, `단무지`, `샐러드`, `김자반`
+- 편집 원본: `data/menu_curated.json`. 각 항목에 명시적 속성, 중복 대표 키와 검수 근거를 기록한다.
+- 생성물: `data/menu_catalog.json`, `data/menu_db.json`. 직접 수정하지 않는다.
+- `npm run build:data` / `npm run clean:data` / 기존 Python clean 진입점은 모두 검수 원본만 사용한다. 과거 자동 추론·자동 복구 규칙으로 삭제 메뉴를 되살리지 않는다.
+- `scripts/curated-catalog.mjs`가 전체 원본을 검증한 뒤에만 생성물을 쓴다. 미확정 열거형, 중복 ID/정규화 이름/대표키, 필수 태그·근거 누락은 실패한다.
+- `menu_catalog_overrides.json`은 `{}`, `menu_catalog_review_candidates.json`은 `[]`로 유지한다. 별도 자동 보정과 운영 검토 대기열을 사용하지 않는다.
+- `npm run audit:catalog`는 원본·생성물의 완전 일치, 삭제 판정 기록과의 일치, 잔존 대기열 없음까지 확인한다. `npm run build`도 생성·감사 게이트를 먼저 실행한다.
+- `docs/menu-source-snapshot.json`은 삭제 전 원본의 불변 스냅샷이다. 생성 전에도 SHA-256, 모든 이전 ID/이름/카테고리, 유지·삭제 판정, 명시적 별칭 그룹과 대표 이름을 대조하여 출처 없는 변경을 차단한다.
+- `docs/data-curation-decisions.json`은 전체 이전 메뉴의 보존/삭제 사유를 담은 감사 기록이다. 앱에 import하지 않는다. 이 기록은 레시피 검증의 증거가 아니다.
+- 새 메뉴를 추가할 때도 이름·슬롯·속성을 명시적으로 검수하고 해당 데이터 개정의 판정 기록/수량을 함께 갱신한다. 자동 추론으로 빈 값을 채우지 않는다.
 
-### `kimchi`
+## 기존 사용자 데이터
 
-- Kimchi, geotjeori, kkakdugi, dongchimi, and kimchi-adjacent fermented vegetable items
-
-### `dessert`
-
-- Fruit, yogurt, milk, beverages, bread/snack dessert, jelly, pudding, ice cream, and sweet items served after the meal
-
-## Decision Rules
-
-1. Prefer how the item is displayed on a real Korean school lunch menu, not just the recipe type.
-2. If an item is clearly protein-dominant and can anchor the meal, it belongs in `main`.
-3. If an item is vegetable-forward, condiment-like, or plated in a small portion, it belongs in `side`.
-4. Drinks, dairy, fruit, sweet breads, and dessert snacks belong in `dessert` even if they are sold as standalone products.
-5. Generic ingredient names or truncated labels should not remain in the dataset.
-
-## Exclusion Rules
-
-- Remove entries that are only ingredients, brands, vague labels, or truncated fragments.
-- Avoid duplicated entries across categories.
-- Prefer fully readable Korean menu names over abbreviations or partial strings.
+사용자가 브라우저에 저장한 식단·즐겨찾기·주간표·직접 입력은 자동 삭제하지 않는다. 운영에서 제외된 메뉴가 과거 초안에 있어도 보존되며 다음 신규 추천의 후보로 되살아나지 않는다. 고정된 과거 메뉴나 직접 입력은 추천 조건/원재료 정보가 확인된 항목으로 간주하지 않는다.

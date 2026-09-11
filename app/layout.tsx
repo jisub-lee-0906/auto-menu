@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "오늘의 급식",
-  description: "클릭 한 번으로 받아보는 균형 잡힌 랜덤 식단표",
+  description: "초·중·고 영양교사를 위한 식단 아이디어 도구. 한 끼 초안을 고치고 주간 식단표로 정리하세요.",
 };
 
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F2F4F6] text-[#191F28]`}
+        className={`${geistSans.variable} ${geistMono.variable}`}
       >
         {children}
         <SpeedInsights />
