@@ -1,18 +1,21 @@
-# 오늘의 급식
+# 오늘의 급식 | 식단·주간표 편집 도구
 
-한국 초·중·고 영양교사가 식단 아이디어를 얻고, 한 끼 초안을 수정해 주간표로 정리하는 Next.js 앱입니다.
+학교 영양교사가 **한 끼 초안 작성 → 메뉴 편집 → 날짜별 주간표 → CSV·JSON 백업**으로 이어갈 수 있는 Next.js 앱입니다. 저장 데이터 검증과 손상·다른 탭 수정 대응을 함께 다룹니다.
 
-운영 주소: https://auto-menu-app-omega.vercel.app/
+[공개 데모](https://auto-menu-app-omega.vercel.app/) · [데이터 정책](docs/menu-data-policy.md) · [채용용 사례](https://github.com/jisub-lee-0906/engineering-portfolio/blob/main/cases/auto-menu.md)
 
-메뉴 데이터의 정리 기준과 신뢰 범위는 [데이터 정책](docs/menu-data-policy.md)을 확인하세요.
+## 프로젝트 개요
 
-## 공개 준비 상태
+식단 아이디어를 얻는 단계와 날짜별 편성·백업을 한 흐름으로 연결합니다. 저장값과 가져온 JSON을 검증하고, 손상된 데이터나 다른 탭의 수정으로 기존 작업을 잃지 않도록 처리합니다.
 
-- 상태: **웹 애플리케이션 (로컬 테스트·빌드 검증)**. 기존 로컬 검증 기록에는 lint, typecheck, logic 테스트 38개, 데이터 감사와 production build 통과가 있습니다.
-- 이 근거는 로컬 테스트·빌드 검증입니다. 브라우저 E2E는 이 환경에서 Playwright Chromium이 없어 실행·검증되지 않았고, 아래 운영 주소의 현재 서비스 상태도 이 문서 검토로 검증하지 않습니다.
-- `npm run dev` 또는 `npm run start`는 로컬 개발·미리보기용입니다. 운영 배포와 실제 사용자 데이터는 별도 환경에서 확인해야 합니다.
+| 항목 | 내용 |
+| --- | --- |
+| 형태 | 브라우저용 식단·주간표 편집 앱 |
+| 핵심 기술 | Next.js 16, React 19, TypeScript, CSS·Tailwind, html2canvas, Playwright |
+| 데이터 | 검수한 메뉴 카탈로그 + 브라우저 로컬 저장 |
+| 범위 | 식단 아이디어·편집·백업. 영양 적합성·알레르기 안전 인증 도구는 아님 |
 
-## 사용 흐름
+## 주요 내용
 
 1. **한 끼 만들기**에서 초안을 추천받습니다.
 2. 메뉴 이름을 눌러 검색하거나 직접 입력합니다. 유지할 메뉴는 **고정**합니다.
@@ -42,15 +45,47 @@
 - 다른 탭에서 수정되면 현재 탭의 자동 저장을 중단합니다. 필요한 주간표를 백업하고 새로고침하세요.
 - 손상된 저장값은 자동 덮어쓰지 않습니다. ‘기존 저장값 보관’으로 원문을 보관한 후 명시적으로 저장을 재개할 수 있습니다. 이 원문 보관 파일은 주간표 가져오기 형식과 다릅니다.
 
-## 신뢰 범위
+## 구조와 기술
 
-이 앱은 식단 아이디어 도구이지 영양 적합성 판정·알레르기 안전 인증·급식 운영 시스템이 아닙니다.
+```text
+app/                    페이지 상태와 공통 스타일
+components/             한 끼 편집기, 메뉴 선택창, 주간표 및 이전 컴포넌트
+lib/menuCatalog.ts      카탈로그와 필터
+lib/menuGenerator.ts    잠금과 조합 추천
+lib/planner.ts          날짜, 주간표, CSV와 백업 검증
+lib/workspace.ts        로컬 작업 공간 검증과 이력
+scripts/                데이터 생성·감사
+tests/                 실제 로직 테스트와 로컬 브라우저 테스트
+```
 
-메뉴명에서 재료/조리법/매운맛을 추정하므로 소스·육수·가공식품 원료나 학교별 레시피 차이는 알 수 없습니다. 직접 입력 메뉴는 재료 정보 미확인으로 표시됩니다. 실제 제공 전 영양교사가 레시피·제공량·알레르기·조리 조건을 검토해야 합니다.
+기술: Next.js 16 / React 19 / TypeScript / CSS + Tailwind / html2canvas / Playwright.
 
-월간 편성 화면, 주간 자동 일괄 생성, 영양·원가·발주 계산, 나이스 연동은 이번 범위에 없습니다.
+<details>
+<summary>메뉴 데이터 생성·감사·보존 정책</summary>
 
-## 실행
+```sh
+npm run build:data
+node scripts/export_catalog_review.mjs
+npm run audit:data
+npm run audit:catalog
+npm run audit:consistency
+```
+
+- `data/menu_curated.json`: 명시적으로 정리한 운영 메뉴와 추천 속성의 단일 편집 원본. 이름 기반 검수이지 레시피/알레르기 인증은 아닙니다.
+- `scripts/curated-catalog.mjs`: 미확정 속성·중복·검수 근거 누락을 차단하는 검증기.
+- `data/menu_db.json`, `data/menu_catalog.json`: 검수 원본에서만 생성합니다. 삭제한 메뉴를 과거 추론기로 되살리지 않습니다.
+- `data/menu_catalog_overrides.json`, `data/menu_catalog_review_candidates.json`: 호환성을 위해 각각 빈 객체/빈 목록으로 유지합니다. 보류 메뉴는 운영에서 제거했습니다.
+- `docs/data-curation-decisions.json`: 삭제 전 전체 메뉴의 보존/삭제 판정 기록. 앱의 추천·검색에서 읽지 않습니다.
+- `audit:catalog`: 생성물과 원본의 정확한 일치, 판정 기록과의 일치, 미확정·중복·보류 없음 확인.
+- `audit:consistency`: 복제한 알고리즘이 아니라 실제 production generator를 테스트합니다.
+
+기존 브라우저에 저장한 사용자 식단은 자동 삭제하지 않습니다. 새 추천·검색은 정리된 카탈로그만 사용합니다.
+
+정책: [docs/menu-data-policy.md](docs/menu-data-policy.md)
+
+</details>
+
+## 실행·사용 방법
 
 Node.js >=20.9.0, 프로젝트 package-lock.json 기준 npm 의존성을 사용합니다.
 
@@ -87,50 +122,30 @@ Playwright Chromium이 필요합니다. 기존 설치를 재사용하려면 `PLA
 
 `tests/deployed-smoke.spec.ts`는 이전 운영 스모크 자료로 남아 있고 기본 테스트 구성에서 제외됩니다. 운영 사이트에 변경성 테스트를 실행하지 마세요.
 
-## 데이터 관리
+## 검증과 한계
 
-```sh
-npm run build:data
-node scripts/export_catalog_review.mjs
-npm run audit:data
-npm run audit:catalog
-npm run audit:consistency
-```
+| 기록 | 확인된 결과 | 확인하지 않은 범위 |
+| --- | --- | --- |
+| 기존 로컬 검사 | lint·typecheck, logic 테스트 **38개**, 데이터 감사·production build 통과 | 현재 문서 편집을 새 앱 검증으로 표시하지 않음 |
+| 2026-10-21 공개 주소 점검 | 공개 데모의 페이지가 HTTP 200 응답 | 추천·주간표·복원 등 실제 브라우저 사용자 여정 |
+| [기존 배포 기록](https://github.com/jisub-lee-0906/auto-menu/commit/0caf3e1517aa3787a627475648cb0749f2f225e3) | Vercel이 해당 보안 커밋의 배포 완료를 보고한 기록 | 현재 기능 E2E·사용자 데이터·운영 정상 여부 |
 
-- `data/menu_curated.json`: 명시적으로 정리한 운영 메뉴와 추천 속성의 단일 편집 원본. 이름 기반 검수이지 레시피/알레르기 인증은 아닙니다.
-- `scripts/curated-catalog.mjs`: 미확정 속성·중복·검수 근거 누락을 차단하는 검증기.
-- `data/menu_db.json`, `data/menu_catalog.json`: 검수 원본에서만 생성합니다. 삭제한 메뉴를 과거 추론기로 되살리지 않습니다.
-- `data/menu_catalog_overrides.json`, `data/menu_catalog_review_candidates.json`: 호환성을 위해 각각 빈 객체/빈 목록으로 유지합니다. 보류 메뉴는 운영에서 제거했습니다.
-- `docs/data-curation-decisions.json`: 삭제 전 전체 메뉴의 보존/삭제 판정 기록. 앱의 추천·검색에서 읽지 않습니다.
-- `audit:catalog`: 생성물과 원본의 정확한 일치, 판정 기록과의 일치, 미확정·중복·보류 없음 확인.
-- `audit:consistency`: 복제한 알고리즘이 아니라 실제 production generator를 테스트합니다.
+2026-09-23 기록에는 GitHub Actions 워크플로·실행 기록이 없고, 해당 환경에서 Playwright Chromium이 없어 브라우저 E2E를 실행하지 못했습니다. 로컬 명령·빌드 결과를 원격 CI 또는 서비스 기능의 성공으로 해석하지 않습니다. 개발·미리보기 명령과 운영 배포는 별도입니다.
 
-기존 브라우저에 저장한 사용자 식단은 자동 삭제하지 않습니다. 새 추천·검색은 정리된 카탈로그만 사용합니다.
+이 앱은 식단 아이디어 도구이지 영양 적합성 판정·알레르기 안전 인증·급식 운영 시스템이 아닙니다.
 
-정책: [docs/menu-data-policy.md](docs/menu-data-policy.md)
+메뉴명에서 재료/조리법/매운맛을 추정하므로 소스·육수·가공식품 원료나 학교별 레시피 차이는 알 수 없습니다. 직접 입력 메뉴는 재료 정보 미확인으로 표시됩니다. 실제 제공 전 영양교사가 레시피·제공량·알레르기·조리 조건을 검토해야 합니다.
 
-## 구조
+월간 편성 화면, 주간 자동 일괄 생성, 영양·원가·발주 계산, 나이스 연동은 이번 범위에 없습니다.
 
-```text
-app/                    페이지 상태와 공통 스타일
-components/             한 끼 편집기, 메뉴 선택창, 주간표 및 이전 컴포넌트
-lib/menuCatalog.ts      카탈로그와 필터
-lib/menuGenerator.ts    잠금과 조합 추천
-lib/planner.ts          날짜, 주간표, CSV와 백업 검증
-lib/workspace.ts        로컬 작업 공간 검증과 이력
-scripts/                데이터 생성·감사
- tests/                 실제 로직 테스트와 로컬 브라우저 테스트
-```
+## 기여와 관련 문서
 
-기술: Next.js 16 / React 19 / TypeScript / CSS + Tailwind / html2canvas / Playwright.
+- **개발:** 이지섭 · AI 도구 협업
+- **데이터:** 문채영
 
-## 크레딧
+원본 앱의 기능을 유지하며 입력 데이터·JSON 백업 검증과 CSV 처리를 공개 사례로 연결합니다.
 
-- Dev: 이지섭
-- Data: 문채영
-
-## 자동 검증 현황 (2026-09-23)
-
-GitHub Actions 워크플로와 실행 기록은 없습니다. 위 로컬 테스트·빌드 기록을 원격 CI 통과로 해석하지 마세요.
-
-Vercel은 직전 보안 커밋 [`0caf3e1`](https://github.com/jisub-lee-0906/auto-menu/commit/0caf3e1517aa3787a627475648cb0749f2f225e3)의 배포 완료 상태를 보고했습니다. 실제 서비스 기능이나 E2E 동작까지 확인한 것은 아닙니다.
+- [메뉴 데이터 정책](docs/menu-data-policy.md)
+- [데이터 정리 판정 기록](docs/data-curation-decisions.json)
+- [보안 안내](SECURITY.md)
+- [채용용 공개 사례](https://github.com/jisub-lee-0906/engineering-portfolio/blob/main/cases/auto-menu.md)
